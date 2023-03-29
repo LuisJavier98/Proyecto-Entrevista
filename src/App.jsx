@@ -1,74 +1,87 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import axios from "axios"
+
+import { Pagination } from "@mui/material"
 import { useEffect, useState } from "react"
-import { HashRouter } from "react-router-dom"
-import Alerta from "./components/Alerta"
+import Albumnes from "./components/Albumnes"
+import Formulario from "./components/Formulario"
+import Modal from "./components/Modal"
 import NavBar from "./components/NavBar"
+import { DzApi } from "./helpers/deezerApi"
 
 function App() {
 
   const [dato, setdato] = useState('')
+  const [cantidad, setcantidad] = useState({
+    total: 0,
+    limite: 0,
+    move: 0
+
+  })
   const [mensaje, setmensaje] = useState('')
-  const [albumData, setAlbumData] = useState(null);
+  const [albumData, setAlbumData] = useState([]);
+  const [cancion, setcancion] = useState('')
 
-  // const buscar = e => {
-  //   e.preventDefault()
-  //   if (dato) {
-  //     const url = `https://api.deezer.com/album/302127`
-  //     const accessToken = 'frVOSAEayyBAMPJd47lF4F6DpXMRs7kehzO4T5Fl0INE3hhJGGl&expires=3600'
-  //     axios.get(url, {
-  //       headers: {
-  //         'Authorization': `Bearer ${accessToken}`
-  //       }
-  //     })
-  //       .then((data) => console.log(data))
-  //       .catch((error) => console.log(error));
 
-  //   }
-  //   else {
-  //     setmensaje('Debes introducir un dato')
-  //   }
-  //   setTimeout(() => {
-  //     setmensaje('')
-  //   }, 1500);
-  // }
+  const buscar = e => {
+    e.preventDefault()
+    if (dato) {
+      DzApi.get(`/search?q=${dato}&index=${cantidad.limite + cantidad.move}`)
+        .then(res => {
+          setcantidad({ ...cantidad, total: res.data.total, move: 0 })
+          setAlbumData(res.data)
+        })
+        .catch(err => console.log(err))
+    }
+    else {
+      setmensaje('Debes introducir un dato')
+    }
+    setTimeout(() => {
+      setmensaje('')
+    }, 1500);
+  }
 
   useEffect(() => {
-    async function fetchAlbum() {
-      try {
-        const response = await axios.get('https://api.deezer.com/genre');
-        console.log(response.data)
-      } catch (error) {
-        console.error(error);
-      }
+    if (dato) {
+      DzApi.get(`/search?q=${dato}&index=${cantidad.limite + cantidad.move}`)
+        .then(res => {
+          setAlbumData(res.data)
+        })
+        .catch(err => console.log(err))
     }
+  }, [cantidad])
 
-    fetchAlbum();
-  }, []);
+
+  const mostrarAudio = audio => {
+    setcancion(audio)
+  }
+  const handleChange = (event, value) => {
+    setcantidad({ ...cantidad, move: (+value-1)*25  })
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+  console.log(cantidad)
 
 
   return (
-    <HashRouter>
-      <div className=" md:flex h-full " >
-        <NavBar />
-        <div className="flex-1 w-full  md:w-11/12 p-8">
-          <form className=" mx-auto flex justify-between " action="">
-            {mensaje && <Alerta>{mensaje}</Alerta>}
-            <div className="relative flex  justify-start flex-1 w-full md:w-2/3  ">
-              <input value={dato} onChange={e => setdato(e.target.value)} className="w-2/3 p-2 rounded-xl mt-3 flex-1 md:flex-none font-bold h-7" placeholder="BUSCAR" type="text" />
-              <button type="submit" className="-translate-x-6 translate-y-1">
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </button>
-            </div>
-            <a href={`https://connect.deezer.com/oauth/auth.php?app_id=${import.meta.env.VITE_APP_ID}&redirect_uri=${import.meta.env.VITE_REDIRECT_URI}&response_type=token`} className=' flex items-center hover:text-red-900 font-bold text-red-700' >Iniciar Sesión</a>
-          </form>
-          <div>
-            Canciones
-          </div>
+
+    <div className=" md:flex h-full relative  " >
+      <NavBar />
+      <div className="flex-1 w-full pb-52 overflow-auto md:w-11/12 p-8">
+        <Formulario dato={dato} setdato={setdato} buscar={buscar} mensaje={mensaje} />
+        <div className="md:grid md:grid-cols-2">
+          {albumData?.data?.map(
+            album => (
+              <Albumnes albumDes={album} key={album.preview} mostrarAudio={mostrarAudio} >{dato}</Albumnes>
+            )
+          )}
+        </div>
+        <div className="flex items-center justify-center gap-4 mt-10">
+          <Pagination count={Math.ceil(+cantidad.total / 25)} onChange={handleChange} />
         </div>
       </div>
-    </HashRouter>
+      <Modal cancion={cancion} setcancion={setcancion} />
+    </div>
   )
 }
 
