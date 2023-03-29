@@ -1,6 +1,7 @@
 
 import { Pagination } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useLocation } from "react-router-dom"
 import Albumnes from "./components/Albumnes"
 import Formulario from "./components/Formulario"
 import Modal from "./components/Modal"
@@ -19,7 +20,7 @@ function App() {
   const [mensaje, setmensaje] = useState('')
   const [albumData, setAlbumData] = useState([]);
   const [cancion, setcancion] = useState('')
-
+  const referencia = useRef()
 
   const buscar = e => {
     e.preventDefault()
@@ -48,26 +49,29 @@ function App() {
         .catch(err => console.log(err))
     }
   }, [cantidad])
+  useEffect(() => {
+    console.log(referencia)
+  }, [])
 
 
   const mostrarAudio = audio => {
     setcancion(audio)
   }
   const handleChange = (event, value) => {
-    setcantidad({ ...cantidad, move: (+value-1)*25  })
+    setcantidad({ ...cantidad, move: (+value - 1) * 25 })
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     })
   }
-  console.log(cantidad)
+
 
 
   return (
 
     <div className=" md:flex h-full relative  " >
       <NavBar />
-      <div className="flex-1 w-full pb-52 overflow-auto md:w-11/12 p-8">
+      <div ref={referencia} className="flex-1  w-full pb-52 overflow-auto md:w-11/12 p-8">
         <Formulario dato={dato} setdato={setdato} buscar={buscar} mensaje={mensaje} />
         <div className="md:grid md:grid-cols-2">
           {albumData?.data?.map(
