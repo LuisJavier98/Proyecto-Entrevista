@@ -3,7 +3,7 @@ import React from 'react'
 const NavBar = () => {
   return (
     <div className=" md:w-1/4 p-4 md:h-full w-full bg-red-700">
-    <img className="my-5" src="/src/img/foxbel-music@3x.png" alt="" />
+    <img className="my-5" src="/logo.png" alt="Imagen Logo" />
     {/* <div className="flex my-5 md:flex-col justify-around md:gap-6">
       <div>
         <p className="font-bold text-xl text-white font-serif">Mi Libreria</p>
