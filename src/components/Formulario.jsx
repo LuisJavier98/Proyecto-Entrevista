@@ -8,7 +8,7 @@ const Formulario = ({ buscar, mensaje, dato,setdato }) => {
     <form onSubmit={buscar} className=" mx-auto flex items-center flex-col justify-between " action="">
       {mensaje && <Alerta>{mensaje}</Alerta>}
       <div className="relative flex justify-center flex-1 w-full md:w-2/3  ">
-        <input value={dato} onChange={e => setdato(e.target.value)} className="w-2/3 p-2 rounded-xl mt-3 flex-1 font-bold h-11 border-2 border-gray-700" placeholder="BUSCAR" type="text" />
+        <input value={dato} onChange={e => setdato(e.target.value)} className="w-2/3 p-2 rounded-xl mt-3 flex-1 font-bold h-11 border-2 border-gray-700" placeholder="BUSCA POR ARTISTA, ALBUM, CANCIÓN Y MAS... " type="text" />
         <button type="submit" className="-translate-x-6 translate-y-1">
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
