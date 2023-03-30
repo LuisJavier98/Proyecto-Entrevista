@@ -2,7 +2,7 @@ import React from 'react'
 
 const NavBar = () => {
   return (
-    <div className=" md:w-1/4 p-4 md:h-full w-full bg-red-700 border-r-2 border-red-800">
+    <div className=" md:w-1/4 p-4 md:h-full w-full bg-red-900 border-r-2 border-red-900">
     <img className="my-5" src="/logo.png" alt="Imagen Logo" />
     {/* <div className="flex my-5 md:flex-col justify-around md:gap-6">
       <div>

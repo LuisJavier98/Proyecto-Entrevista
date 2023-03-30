@@ -20,7 +20,8 @@ function App() {
   const [cancion, setcancion] = useState({
     url: '',
     nombre: '',
-    grupo: ''
+    grupo: '',
+    imageUrl: ''
   })
 
   const buscar = e => {
@@ -41,8 +42,8 @@ function App() {
     }, 1500);
   }
 
-  const mostrarAudio = (audio, artist, title) => {
-    setcancion({ ...cancion, url: audio, nombre: title, grupo: artist.name })
+  const mostrarAudio = (audio, artist, title, image) => {
+    setcancion({ ...cancion, url: audio, nombre: title, grupo: artist.name, imageUrl: image.cover_big })
   }
   const handleChange = (event, value) => {
     setcantidad({ ...cantidad, move: (+value - 1) * 25 })
