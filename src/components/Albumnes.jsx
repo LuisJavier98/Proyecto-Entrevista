@@ -2,7 +2,6 @@ import React from 'react'
 
 const Albumnes = ({ albumDes,mostrarAudio }) => {
   const { title, artist, album, preview } = albumDes
-
   return (
     <div className='mt-8 flex flex-col justify-center items-center gap-3'>
       <h1 className='font-bold text-center text-2xl font-serif'>{title}</h1>

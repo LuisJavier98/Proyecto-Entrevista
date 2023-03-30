@@ -72,7 +72,7 @@ function App() {
         <div className="md:grid md:grid-cols-2">
           {albumData?.data?.map(
             album => (
-              <Albumnes albumDes={album} key={album.preview} mostrarAudio={mostrarAudio} >{dato}</Albumnes>
+              <Albumnes albumDes={album} key={album.rank} mostrarAudio={mostrarAudio} >{dato}</Albumnes>
             )
           )}
         </div>
