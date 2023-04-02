@@ -1,88 +1,24 @@
-
-import { Pagination } from "@mui/material"
-import { useEffect, useRef, useState } from "react"
-import Albumnes from "./components/Albumnes"
-import Formulario from "./components/Formulario"
-import Modal from "./components/Modal"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import NavBar from "./components/NavBar"
-import { DzApi } from "./helpers/deezerApi"
-
+import Index from "./components/Index"
+import { GetToken } from "./components/GetToken"
 function App() {
-
-  const [dato, setdato] = useState('')
-  const [cantidad, setcantidad] = useState({
-    total: 0,
-    limite: 0,
-    move: 0
-  })
-  const [mensaje, setmensaje] = useState('')
-  const [albumData, setAlbumData] = useState([]);
-  const [cancion, setcancion] = useState({
-    url: '',
-    nombre: '',
-    grupo: '',
-    imageUrl: ''
-  })
-
-  const buscar = e => {
-    e.preventDefault()
-    if (dato) {
-      DzApi.get(`/search?q=${dato}&index=${cantidad.limite + cantidad.move}`)
-        .then(res => {
-          setcantidad({ ...cantidad, total: res.data.total, move: 0 })
-          setAlbumData(res.data)
-        })
-        .catch(err => setmensaje(err.response.data.msg))
-    }
-    else {
-      setmensaje('Debes introducir un dato')
-    }
-    setTimeout(() => {
-      setmensaje('')
-    }, 1500);
+  const hash = window.location.hash
+  if (hash) {
+    localStorage.setItem('token', hash.split('=')[1].split('&')[0])
   }
-
-  const mostrarAudio = (audio, artist, title, image) => {
-    setcancion({ ...cancion, url: audio, nombre: title, grupo: artist.name, imageUrl: image.cover_big })
-  }
-  const handleChange = (event, value) => {
-    setcantidad({ ...cantidad, move: (+value - 1) * 25 })
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    })
-  }
-
-
-  useEffect(() => {
-    if (dato) {
-      DzApi.get(`/search?q=${dato}&index=${cantidad.limite + cantidad.move}`)
-        .then(res => {
-          setAlbumData(res.data)
-        })
-        .catch(err => console.log(err))
-    }
-  }, [cantidad])
-
   return (
 
-    <div className=" md:flex h-full relative  " >
-      <NavBar />
-      <div className="flex-1  w-full pb-52 overflow-auto md:w-11/12 p-8">
-        <Formulario dato={dato} setdato={setdato} buscar={buscar} mensaje={mensaje} />
-        <div className="md:grid md:grid-cols-2">
-          {albumData?.data?.map(
-            album => (
-              <Albumnes albumDes={album} key={album.rank} mostrarAudio={mostrarAudio} >{dato}</Albumnes>
-            )
-          )}
-        </div>
-        <div className="flex items-center justify-center gap-4 mt-10">
-          <Pagination count={Math.ceil(+cantidad.total / 25)} onChange={handleChange} />
-        </div>
+
+    <BrowserRouter>
+      <div className=" md:flex h-full relative  " >
+        <NavBar />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/:token" element={<GetToken />} />
+          </Routes>
       </div>
-      <Modal cancion={cancion} setcancion={setcancion} />
-    </div>
+    </BrowserRouter>
   )
 }
 

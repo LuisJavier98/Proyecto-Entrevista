@@ -7,3 +7,4 @@ export const DzApi = axios.create({
     'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
   }
 })
+

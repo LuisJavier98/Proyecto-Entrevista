@@ -1,23 +1,21 @@
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
-import Typewriter from 'typewriter-effect';
 
-const Modal = ({ cancion, setcancion }) => {
+import React, { useState } from 'react'
+import Marquee from 'react-fast-marquee';
+
+
+const Modal = ({ cancion }) => {
+
+
   const modal = (dato = '') => (
-    <div className={` bg-red-500 shadow-2xl flex justify-center flex-col items-center w-full fixed bottom-0 left-0 ${dato} h-28 transition-all p-4  `}>
+    <div className={` bg-gray-600 md:right-3 shadow-2xl border-t-1 border-gray-500 flex justify-center flex-col items-center w-full md:w-auto fixed bottom-0 left-0 ${dato} h-20 transition-all p-4  `}>
       <div className='font-bold mb-2 text-xl'>
-        <Typewriter
-          options={{
-            strings: [`${cancion.nombre}`, `${cancion.grupo}`],
-            autoStart: true,
-            loop: true,
-            pauseFor: 200
-          }}
-        />
+        <Marquee gradientWidth={30} className='md:w-3/4 w-full text-sm  text-center mx-auto' gradientColor={[35, 35, 45]} direction='left' speed={5}>
+          <p className='text-white font-light ' >{cancion.nombre} -</p>
+          <p className='text-white font-light' >{cancion.grupo}</p>
+        </Marquee>
       </div>
       <audio volume='0.0' autoPlay className="md:w-3/5  w-full shadow-2xl " src={cancion.url} controls ></audio >
-      <button className=" text-white absolute top-3 -scale-y-125 right-5" onClick={() => setcancion({ ...cancion, url: '' })} ><FontAwesomeIcon icon={faXmark} /> </button>
+
     </div >
   )
 
